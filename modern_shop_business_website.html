@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top One Glass Design | Premium Glass & Interior Solutions in Dhaka</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            400: '#9edb22',
+                            500: '#8cbf26',
+                            600: '#75a31d',
+                            700: '#5c8216',
+                        },
+                        glass: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            400: '#8cbf26',
+                            500: '#8cbf26',
+                            600: '#75a31d',
+                            900: '#134e4a',
+                        },
+                        dark: {
+                            900: '#0b0f17',
+                            800: '#111827',
+                            700: '#1f2937',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Alpine.js -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+        
+        /* Glassmorphism Styles */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        .glass-card-hover:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(45, 212, 191, 0.4);
+            box-shadow: 0 8px 32px 0 rgba(13, 148, 136, 0.15);
+        }
+        .glass-nav {
+            background: rgba(11, 15, 23, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #111827;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #14b8a6;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body 
+    x-data="glassShopApp()" 
+    x-init="initData()" 
+    class="font-sans bg-dark-900 text-slate-100 antialiased selection:bg-glass-500 selection:text-white"
+>
+
+    <!-- Notification Toast -->
+    <div 
+        x-show="toast.show" 
+        x-transition
+        x-cloak
+        class="fixed bottom-6 right-6 z-50 flex items-center gap-3 bg-slate-800 text-white px-5 py-3.5 rounded-2xl shadow-2xl border border-brand-500/50 max-w-md"
+    >
+        <div class="p-1.5 bg-brand-500 rounded-full text-slate-900 font-bold">
+            <i data-lucide="check" class="w-4 h-4"></i>
+        </div>
+        <p class="text-xs sm:text-sm font-medium" x-text="toast.message"></p>
+    </div>
+
+    <!-- Top Contact Strip -->
+    <div class="bg-dark-800/90 text-slate-300 text-xs border-b border-slate-800/80 py-2 px-4 sm:px-8">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+            <div class="flex items-center gap-4 flex-wrap justify-center">
+                <span class="flex items-center gap-1.5 text-brand-400 font-medium">
+                    <i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Noyabari, Madani Avenue, 100ft Road, Notun Bazar, Vatara, Dhaka
+                </span>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="tel:010320764930" class="hover:text-brand-400 transition-colors flex items-center gap-1">
+                    <i data-lucide="phone" class="w-3.5 h-3.5 text-brand-400"></i> +88 010320764930
+                </a>
+                <span class="text-slate-600">|</span>
+                <a href="https://wa.me/88010320764930" target="_blank" class="hover:text-emerald-400 text-emerald-400 transition-colors flex items-center gap-1 font-semibold">
+                    <i data-lucide="message-square" class="w-3.5 h-3.5"></i> WhatsApp Us
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation Header -->
+    <header class="sticky top-0 z-40 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Mobile Menu Toggle -->
+            <button @click="mobileMenuOpen = !mobileMenuOpen" class="lg:hidden p-2 text-slate-300 hover:text-white">
+                <i data-lucide="menu" class="w-6 h-6" x-show="!mobileMenuOpen"></i>
+                <i data-lucide="x" class="w-6 h-6" x-show="mobileMenuOpen" x-cloak></i>
+            </button>
+
+            <!-- Brand Logo (User Uploaded Official Logo) -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="bg-white p-2 rounded-2xl border border-brand-500/30 shadow-lg shadow-brand-500/10 flex items-center justify-center transition-transform group-hover:scale-105">
+                    <img 
+                        src="WhatsApp Image 2026-10-15 at 14.37.05.jpeg" 
+                        alt="Top One Glass Design Logo" 
+                        class="h-9 sm:h-11 w-auto object-contain"
+                        onerror="this.onerror=null; this.src='https://placehold.co/180x60/8cbf26/000000?text=TOP+ONE+GLASS';"
+                    >
+                </div>
+            </a>
+
+            <!-- Desktop Links -->
+            <nav class="hidden lg:flex items-center space-x-7 text-xs uppercase tracking-wider font-semibold text-slate-300">
+                <a href="#home" class="hover:text-brand-400 transition-colors">Home</a>
+                <a href="#services" class="hover:text-brand-400 transition-colors">Glass Products</a>
+                <a href="#estimator" class="hover:text-brand-400 transition-colors text-brand-400 font-bold">Cost Estimator</a>
+                <a href="#portfolio" class="hover:text-brand-400 transition-colors">Gallery</a>
+                <a href="#whyus" class="hover:text-brand-400 transition-colors">Why Choose Us</a>
+                <a href="#contact" class="hover:text-brand-400 transition-colors">Contact</a>
+                <button @click="publishModalOpen = true" class="text-brand-400 border border-brand-500/40 px-3 py-1.5 rounded-lg hover:bg-brand-500/10 transition-colors flex items-center gap-1">
+                    <i data-lucide="globe" class="w-3.5 h-3.5"></i> How to Publish
+                </button>
+            </nav>
+
+            <!-- CTA Call Button -->
+            <div class="flex items-center gap-3">
+                <a href="tel:010320764930" class="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-slate-950 font-extrabold text-xs tracking-wide shadow-lg shadow-brand-500/20 transition-all">
+                    <i data-lucide="phone-call" class="w-4 h-4"></i> Call Now
+                </a>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div x-show="mobileMenuOpen" x-cloak class="lg:hidden glass-nav border-t border-slate-800 px-6 py-4 space-y-3">
+            <a @click="mobileMenuOpen = false" href="#home" class="block py-2 text-sm font-semibold text-slate-200">Home</a>
+            <a @click="mobileMenuOpen = false" href="#services" class="block py-2 text-sm font-semibold text-slate-200">Glass Products & Work</a>
+            <a @click="mobileMenuOpen = false" href="#estimator" class="block py-2 text-sm font-semibold text-brand-400">Calculate Price / Quote</a>
+            <a @click="mobileMenuOpen = false" href="#portfolio" class="block py-2 text-sm font-semibold text-slate-200">Project Gallery</a>
+            <a @click="mobileMenuOpen = false" href="#whyus" class="block py-2 text-sm font-semibold text-slate-200">Why Top One Glass</a>
+            <a @click="mobileMenuOpen = false" href="#contact" class="block py-2 text-sm font-semibold text-slate-200">Location & Contact</a>
+            <button @click="mobileMenuOpen = false; publishModalOpen = true" class="w-full text-left py-2 text-sm font-semibold text-brand-400 flex items-center gap-2">
+                <i data-lucide="globe" class="w-4 h-4"></i> How to Publish Website
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative overflow-hidden py-20 lg:py-28 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-dark-800 via-dark-900 to-black">
+        <!-- Background Ambient Glow -->
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-brand-500/10 blur-[130px] rounded-full pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-card text-brand-400 text-xs font-semibold tracking-wide border-brand-500/30">
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Dhaka's Leading Custom Glass & Interior Specialist
+                    </div>
+
+                    <h1 class="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold text-white leading-tight">
+                        Modern Glass & Luxury <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 via-lime-300 to-emerald-400 italic">Interior Solutions</span>.
+                    </h1>
+
+                    <p class="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                        Top One Glass Design offers high-end glass door cutting, LED touch lighting mirrors, bend glass, stair railings, wall glass decor, and custom architectural tempered glass solutions across Dhaka.
+                    </p>
+
+                    <!-- Primary CTAs -->
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-3">
+                        <a href="https://wa.me/88010320764930?text=Hello%20Top%20One%20Glass%20Design,%20I%20want%20to%20inquire%20about%20glass%20work." target="_blank" class="inline-flex items-center justify-center px-7 py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-2xl shadow-lg shadow-emerald-600/30 transition-all gap-2 text-sm">
+                            <i data-lucide="message-square" class="w-4 h-4"></i> Get Instant Quote (WhatsApp)
+                        </a>
+                        <a href="#estimator" class="inline-flex items-center justify-center px-7 py-4 glass-card hover:bg-white/10 text-white font-semibold rounded-2xl transition-all text-sm">
+                            <i data-lucide="calculator" class="w-4 h-4 mr-2 text-brand-400"></i> Estimate Price
+                        </a>
+                    </div>
+
+                    <!-- Highlight Badges -->
+                    <div class="grid grid-cols-3 gap-4 pt-8 border-t border-slate-800 max-w-lg mx-auto lg:mx-0">
+                        <div>
+                            <p class="text-xl sm:text-2xl font-bold text-white font-serif">100%</p>
+                            <p class="text-[11px] text-slate-400 font-medium mt-0.5">Custom Precision Cut</p>
+                        </div>
+                        <div>
+                            <p class="text-xl sm:text-2xl font-bold text-white font-serif">Tempered</p>
+                            <p class="text-[11px] text-slate-400 font-medium mt-0.5">Safety & Heavy Duty</p>
+                        </div>
+                        <div>
+                            <p class="text-xl sm:text-2xl font-bold text-white font-serif">Fast</p>
+                            <p class="text-[11px] text-slate-400 font-medium mt-0.5">On-Site Installation</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero Image Showcase -->
+                <div class="lg:col-span-5 relative">
+                    <div class="relative mx-auto max-w-md lg:max-w-none">
+                        <div class="aspect-[4/5] rounded-3xl overflow-hidden glass-card p-2 border-brand-500/30">
+                            <img 
+                                src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80" 
+                                alt="Modern Interior Glass Work Dhaka" 
+                                class="w-full h-full object-cover rounded-2xl"
+                            >
+                        </div>
+                        
+                        <!-- Floating Glass Card Accent -->
+                        <div class="absolute -bottom-6 -left-6 glass-card p-4 rounded-2xl shadow-2xl border border-brand-500/40 flex items-center gap-4 max-w-xs hidden sm:flex">
+                            <div class="w-12 h-12 rounded-xl bg-brand-500/20 text-brand-400 flex items-center justify-center shrink-0">
+                                <i data-lucide="shield-check" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-white">Bend Glass & Mirrors Specialist</p>
+                                <p class="text-[11px] text-slate-400">Madani Avenue 100ft Road, Dhaka</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Services & Glass Categories Section -->
+    <section id="services" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-12">
+            <span class="text-xs font-bold uppercase tracking-widest text-brand-400">Our Complete Glass Solutions</span>
+            <h2 class="text-3xl sm:text-4xl font-serif font-bold text-white mt-2">Specialized Glass Products & Fitting Works</h2>
+            <p class="text-slate-400 text-sm mt-3">From residential luxury lighting mirrors to high-strength commercial bend glass staircases.</p>
+        </div>
+
+        <!-- Filter Category Tabs -->
+        <div class="flex items-center justify-center gap-2 overflow-x-auto pb-4 mb-8 scrollbar-none">
+            <template x-for="cat in categories" :key="cat">
+                <button 
+                    @click="selectedCategory = cat" 
+                    :class="selectedCategory === cat ? 'bg-brand-500 text-slate-950 font-extrabold shadow-lg shadow-brand-500/20' : 'glass-card text-slate-300 hover:text-white'"
+                    class="px-5 py-2.5 rounded-full text-xs transition-all whitespace-nowrap"
+                    x-text="cat"
+                ></button>
+            </template>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <template x-for="item in filteredServices" :key="item.id">
+                <div class="glass-card glass-card-hover rounded-3xl overflow-hidden flex flex-col justify-between transition-all duration-300">
+                    <div>
+                        <!-- Glass Image -->
+                        <div class="relative aspect-[16/10] overflow-hidden bg-slate-800 cursor-pointer" @click="openModal(item)">
+                            <img :src="item.image" :alt="item.title" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                            <span class="absolute top-3 left-3 bg-dark-900/80 backdrop-blur-md text-brand-400 text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full border border-brand-500/30" x-text="item.category"></span>
+                        </div>
+
+                        <!-- Card Content -->
+                        <div class="p-6">
+                            <h3 class="font-serif font-bold text-white text-xl hover:text-brand-400 cursor-pointer transition-colors" @click="openModal(item)" x-text="item.title"></h3>
+                            <p class="text-slate-400 text-xs mt-2 leading-relaxed" x-text="item.description"></p>
+                            
+                            <!-- Key Features -->
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                <template x-for="feat in item.features" :key="feat">
+                                    <span class="text-[10px] font-semibold bg-slate-800/80 text-slate-300 px-2.5 py-1 rounded-md border border-slate-700" x-text="feat"></span>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer / Direct Action -->
+                    <div class="p-6 pt-0 border-t border-slate-800/60 mt-4 flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] uppercase text-slate-400 font-semibold block">Available Thickness</span>
+                            <span class="text-xs font-bold text-brand-400" x-text="item.thickness"></span>
+                        </div>
+                        <a 
+                            :href="'https://wa.me/88010320764930?text=I%20want%20to%20inquire%20about:%20' + encodeURIComponent(item.title)" 
+                            target="_blank" 
+                            class="px-4 py-2 bg-emerald-600/20 hover:bg-emerald-600 text-emerald-400 hover:text-white rounded-xl text-xs font-bold border border-emerald-500/30 transition-all flex items-center gap-1.5"
+                        >
+                            <i data-lucide="message-square" class="w-3.5 h-3.5"></i> Order Details
+                        </a>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </section>
+
+    <!-- Interactive Cost Estimator Section -->
+    <section id="estimator" class="py-20 bg-dark-800/60 border-y border-slate-800 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <div class="lg:col-span-5 space-y-4">
+                    <span class="text-xs font-bold uppercase tracking-widest text-brand-400">Instant Glass Calculator</span>
+                    <h2 class="text-3xl sm:text-4xl font-serif font-bold text-white">Estimate Your Glass Project Cost</h2>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        Select your preferred glass type, input approximate measurement in Square Feet (Sq Ft), and get an estimated approximate cost instantly.
+                    </p>
+                    <div class="p-4 glass-card rounded-2xl border-emerald-500/20 text-xs text-slate-300 space-y-2">
+                        <p class="font-bold text-emerald-400 flex items-center gap-1.5">
+                            <i data-lucide="info" class="w-4 h-4"></i> Custom Cutting & On-Site Measurement
+                        </p>
+                        <p>Final pricing depends on exact glass thickness (5mm - 12mm), hardware, and installation site in Dhaka.</p>
+                    </div>
+                </div>
+
+                <!-- Calculator Form -->
+                <div class="lg:col-span-7 glass-card p-6 sm:p-8 rounded-3xl border-brand-500/30">
+                    <form @submit.prevent="submitEstimate" class="space-y-5">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-2">Select Glass Type</label>
+                                <select x-model="calc.type" class="w-full bg-dark-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-brand-500">
+                                    <option value="500">Lighting / LED Touch Mirror</option>
+                                    <option value="380">Toughened Glass Door (10/12mm)</option>
+                                    <option value="420">Bend Glass / Curved Glass Work</option>
+                                    <option value="650">Staircase Curved Glass Railing</option>
+                                    <option value="320">Wall Mirror / Decorative Glass</option>
+                                    <option value="280">Custom Frosted / Pattern Glass</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-2">Estimated Area (Sq. Feet)</label>
+                                <input type="number" min="1" x-model.number="calc.sqft" placeholder="e.g. 25 Sq Ft" class="w-full bg-dark-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-brand-500">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-2">Your Name</label>
+                                <input type="text" x-model="calc.name" required placeholder="Full Name" class="w-full bg-dark-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-brand-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-2">Phone Number</label>
+                                <input type="tel" x-model="calc.phone" required placeholder="01XXXXXXXXX" class="w-full bg-dark-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-brand-500">
+                            </div>
+                        </div>
+
+                        <!-- Live Calculated Price Banner -->
+                        <div class="p-4 bg-dark-900/90 rounded-2xl border border-brand-500/40 flex items-center justify-between">
+                            <div>
+                                <span class="text-xs text-slate-400 block">Approximate Estimated Total:</span>
+                                <span class="text-2xl font-serif font-bold text-brand-400" x-text="'৳ ' + estimatedTotal.toLocaleString()"></span>
+                            </div>
+                            <span class="text-[10px] text-slate-500 font-semibold bg-slate-800 px-2.5 py-1 rounded-md">BDT Approx.</span>
+                        </div>
+
+                        <button type="submit" class="w-full py-4 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-slate-950 font-extrabold text-sm rounded-xl transition-all shadow-lg shadow-brand-500/25">
+                            Request Callback & Free Site Visit
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section id="whyus" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-14">
+            <span class="text-xs font-bold uppercase tracking-widest text-brand-400">Why Top One Glass Design</span>
+            <h2 class="text-3xl sm:text-4xl font-serif font-bold text-white mt-2">Dhaka's Most Trusted Glass Craftsmanship</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="glass-card p-8 rounded-3xl text-center space-y-4">
+                <div class="w-14 h-14 bg-brand-500/10 text-brand-400 rounded-2xl flex items-center justify-center mx-auto border border-brand-500/30">
+                    <i data-lucide="scissors" class="w-7 h-7"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white">Precision Glass Cutting</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">Advanced glass cutting and edge polishing for smooth bevels, custom door fittings, and tailored wall mirrors.</p>
+            </div>
+
+            <div class="glass-card p-8 rounded-3xl text-center space-y-4">
+                <div class="w-14 h-14 bg-brand-500/10 text-brand-400 rounded-2xl flex items-center justify-center mx-auto border border-brand-500/30">
+                    <i data-lucide="shield" class="w-7 h-7"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white">Tempered Safety Glass</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">High-durability toughened safety glass options (5mm - 12mm) engineered for commercial and luxury residential use.</p>
+            </div>
+
+            <div class="glass-card p-8 rounded-3xl text-center space-y-4">
+                <div class="w-14 h-14 bg-brand-500/10 text-brand-400 rounded-2xl flex items-center justify-center mx-auto border border-brand-500/30">
+                    <i data-lucide="wrench" class="w-7 h-7"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white">Expert On-Site Fitting</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">Professional installation technicians serving Notun Bazar, Gulshan, Banani, Uttara, and all areas of Dhaka.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Gallery Modal Lightbox -->
+    <section id="portfolio" class="py-20 bg-dark-800/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span class="text-xs font-bold uppercase tracking-widest text-brand-400">Our Finished Projects</span>
+                <h2 class="text-3xl sm:text-4xl font-serif font-bold text-white mt-2">Glass Work Showcase</h2>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <template x-for="(img, idx) in galleryImages" :key="idx">
+                    <div 
+                        @click="activeGalleryImage = img; modalOpen = true" 
+                        class="glass-card aspect-square rounded-2xl overflow-hidden cursor-pointer group relative"
+                    >
+                        <img :src="img.url" :alt="img.title" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark-900/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                            <div>
+                                <p class="text-xs font-bold text-white" x-text="img.title"></p>
+                                <p class="text-[10px] text-brand-400" x-text="img.location"></p>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact & Store Location Section -->
+    <section id="contact" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            
+            <!-- Contact Details -->
+            <div class="lg:col-span-5 space-y-6">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-brand-400">Visit Our Workshop / Shop</span>
+                    <h2 class="text-3xl font-serif font-bold text-white mt-1">Get in Touch With Us</h2>
+                    <p class="text-slate-400 text-xs mt-2">Visit our location or contact us directly for measurements and custom glass consultations.</p>
+                </div>
+
+                <div class="space-y-4 text-xs text-slate-300">
+                    <div class="glass-card p-4 rounded-2xl flex items-start gap-4">
+                        <div class="p-2.5 bg-brand-500/20 text-brand-400 rounded-xl shrink-0">
+                            <i data-lucide="map-pin" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <p class="font-bold text-white text-sm">Shop Address</p>
+                            <p class="text-slate-300 mt-0.5">Noyabari, Madani Avenue, 100 Feet Road, Notun Bazar, Vatara, Dhaka, Bangladesh</p>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-4 rounded-2xl flex items-start gap-4">
+                        <div class="p-2.5 bg-brand-500/20 text-brand-400 rounded-xl shrink-0">
+                            <i data-lucide="phone" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <p class="font-bold text-white text-sm">Phone Number</p>
+                            <a href="tel:010320764930" class="text-brand-400 font-semibold hover:underline mt-0.5 block">+88 010320764930</a>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-4 rounded-2xl flex items-start gap-4">
+                        <div class="p-2.5 bg-brand-500/20 text-brand-400 rounded-xl shrink-0">
+                            <i data-lucide="mail" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <p class="font-bold text-white text-sm">Email Address</p>
+                            <a href="mailto:jmr38846@gmail.com" class="text-slate-300 hover:text-white mt-0.5 block">jmr38846@gmail.com</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Action Buttons -->
+                <div class="flex gap-3">
+                    <a href="tel:010320764930" class="flex-1 py-3.5 bg-brand-600 hover:bg-brand-500 text-slate-950 font-extrabold text-xs rounded-xl text-center shadow-lg transition-all flex items-center justify-center gap-2">
+                        <i data-lucide="phone-call" class="w-4 h-4"></i> Direct Call
+                    </a>
+                    <a href="https://wa.me/88010320764930" target="_blank" class="flex-1 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl text-center shadow-lg transition-all flex items-center justify-center gap-2">
+                        <i data-lucide="message-square" class="w-4 h-4"></i> WhatsApp
+                    </a>
+                </div>
+            </div>
+
+            <!-- Google Map Location Card -->
+            <div class="lg:col-span-7 glass-card p-4 rounded-3xl border-brand-500/30 flex flex-col justify-between min-h-[380px]">
+                <div class="relative w-full h-full rounded-2xl overflow-hidden bg-slate-800 flex items-center justify-center min-h-[300px]">
+                    <!-- Stylized Map Placeholder representing Madani Avenue 100ft road Dhaka -->
+                    <div class="absolute inset-0 bg-[radial-gradient(#8cbf26_1px,transparent_1px)] [background-size:20px_20px] opacity-20"></div>
+                    
+                    <div class="relative z-10 text-center p-6 glass-card rounded-2xl max-w-sm border-brand-500/40">
+                        <div class="w-12 h-12 bg-brand-500 text-slate-950 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg shadow-brand-500/40 animate-bounce">
+                            <i data-lucide="map-pin" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="font-serif font-bold text-white text-lg">Top One Glass Design</h4>
+                        <p class="text-xs text-slate-300 mt-1">Noyabari, Madani Avenue, 100 Feet Road, Notun Bazar, Vatara, Dhaka</p>
+                        <a href="https://maps.google.com/?q=Madani+Avenue+100+Feet+Road+Notun+Bazar+Dhaka" target="_blank" class="mt-4 inline-flex items-center gap-1.5 px-4 py-2 bg-brand-500 text-slate-950 rounded-xl text-xs font-extrabold hover:bg-brand-400 transition-colors">
+                            <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Open Google Maps
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark-900 border-t border-slate-800 text-slate-400 py-12 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-3">
+                <div class="bg-white p-1.5 rounded-xl border border-brand-500/30">
+                    <img src="WhatsApp Image 2026-10-15 at 14.37.05.jpeg" alt="Top One Glass Design Logo" class="h-8 w-auto">
+                </div>
+                <div>
+                    <p class="text-white font-serif font-bold text-sm">Top One Glass Design</p>
+                    <p class="text-[11px] text-slate-500">Madani Avenue 100 Feet Road, Dhaka</p>
+                </div>
+            </div>
+
+            <p class="text-center sm:text-right text-slate-500">
+                &copy; 2026 Top One Glass Design. All rights reserved. Custom Glass & Interior Work in Dhaka.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Image Lightbox Modal -->
+    <div x-show="modalOpen" x-cloak class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div @click.away="modalOpen = false" class="glass-card max-w-2xl w-full rounded-3xl p-6 border-brand-500/40 relative">
+            <button @click="modalOpen = false" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <template x-if="activeGalleryImage">
+                <div class="space-y-4">
+                    <img :src="activeGalleryImage.url" :alt="activeGalleryImage.title" class="w-full h-72 object-cover rounded-2xl">
+                    <h3 class="text-xl font-serif font-bold text-white" x-text="activeGalleryImage.title"></h3>
+                    <p class="text-xs text-slate-300" x-text="activeGalleryImage.location"></p>
+                    <a href="https://wa.me/88010320764930" target="_blank" class="inline-flex items-center justify-center w-full py-3 bg-emerald-600 text-white font-bold text-xs rounded-xl gap-2">
+                        <i data-lucide="message-square" class="w-4 h-4"></i> Inquire This Design on WhatsApp
+                    </a>
+                </div>
+            </template>
+        </div>
+    </div>
+
+    <!-- Publishing & Deployment Guide Modal -->
+    <div x-show="publishModalOpen" x-cloak class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+        <div @click.away="publishModalOpen = false" class="glass-card max-w-3xl w-full my-8 rounded-3xl p-6 sm:p-8 border-brand-500/40 relative max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <button @click="publishModalOpen = false" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+
+            <div class="space-y-6">
+                <div class="flex items-center gap-3">
+                    <div class="p-3 bg-brand-500/20 text-brand-400 rounded-2xl border border-brand-500/40">
+                        <i data-lucide="rocket" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-serif font-bold text-white">How to Publish Your Website Online</h3>
+                        <p class="text-xs text-slate-400">Step-by-step instructions in Bangla & English to make Top One Glass Design live.</p>
+                    </div>
+                </div>
+
+                <!-- Step 1: File Prep -->
+                <div class="glass-card p-5 rounded-2xl space-y-2 border-slate-700">
+                    <div class="flex items-center gap-2 text-brand-400 font-bold text-sm">
+                        <span class="w-6 h-6 rounded-full bg-brand-500 text-slate-950 flex items-center justify-center text-xs">1</span>
+                        <span>Save your Code & Logo File</span>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed pl-8">
+                        ১. এই ওয়েবসাইটের পুরো কোডটি আপনার কম্পিউটারে <code class="bg-slate-800 px-1.5 py-0.5 rounded text-brand-400">index.html</code> নামে একটি ফাইলে সেভ করুন।<br>
+                        ২. আপনার লোগো ছবিটি একই ফোল্ডারে রাখুন এবং সেটির নাম দিন: <code class="bg-slate-800 px-1.5 py-0.5 rounded text-brand-400">WhatsApp Image 2026-10-15 at 14.37.05.jpeg</code> (অথবা কোডের সাথে নাম মিলিয়ে দিন)।
+                    </p>
+                </div>
+
+                <!-- Step 2: Hosting Options -->
+                <div class="space-y-3">
+                    <h4 class="text-sm font-bold text-white uppercase tracking-wider">Choose Free Hosting Platform:</h4>
+
+                    <!-- Option A: Netlify -->
+                    <div class="glass-card p-5 rounded-2xl space-y-2 border-slate-700">
+                        <div class="flex items-center justify-between">
+                            <span class="text-emerald-400 font-bold text-sm flex items-center gap-2">
+                                <i data-lucide="upload-cloud" class="w-4 h-4"></i> Option 1: Netlify (সবচেয়ে সহজ - ১ মিনিট সময় লাগবে)
+                            </span>
+                            <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-full font-bold">Recommended</span>
+                        </div>
+                        <ol class="text-xs text-slate-300 space-y-1.5 pl-4 list-decimal leading-relaxed">
+                            <li><a href="https://www.netlify.com" target="_blank" class="text-brand-400 underline">Netlify.com</a> ওয়েবসাইটে গিয়ে একটি ফ্রি একাউন্ট তৈরি করুন।</li>
+                            <li><code class="bg-slate-800 px-1.5 py-0.5 rounded">index.html</code> এবং আপনার লোগো ছবি দুইটি একটি ফোল্ডারে রেখে সম্পূর্ণ ফোল্ডারটি জিপ (ZIP) করুন।</li>
+                            <li>Netlify Dashboard এর <strong>"Sites"</strong> ট্যাবে গিয়ে Drag and Drop করে জিপ ফাইলটি ছেড়ে দিন।</li>
+                            <li>কয়েক সেকেন্ডের মধ্যে আপনার ফ্রি ওয়েবসাইট লিংক পেয়ে যাবেন (যেমন: <code class="text-brand-400">toponeglass.netlify.app</code>)।</li>
+                        </ol>
+                    </div>
+
+                    <!-- Option B: GitHub Pages -->
+                    <div class="glass-card p-5 rounded-2xl space-y-2 border-slate-700">
+                        <span class="text-sky-400 font-bold text-sm flex items-center gap-2">
+                            <i data-lucide="github" class="w-4 h-4"></i> Option 2: GitHub Pages (ফ্রি প্রফেশনাল হোস্টিং)
+                        </span>
+                        <ol class="text-xs text-slate-300 space-y-1.5 pl-4 list-decimal leading-relaxed">
+                            <li><a href="https://github.com" target="_blank" class="text-brand-400 underline">GitHub.com</a> এ গিয়ে সাইন আপ করুন।</li>
+                            <li>নতুন একটি Repository তৈরি করুন (নাম দিন: <code class="bg-slate-800 px-1.5 py-0.5 rounded text-brand-400">top-one-glass-design</code>)।</li>
+                            <li>আপনার <code class="bg-slate-800 px-1.5 py-0.5 rounded">index.html</code> এবং লোগো পিকচার আপলোড করুন।</li>
+                            <li>Repository Settings > <strong>Pages</strong> এ যান এবং Source হিসাবে <strong>main branch</strong> নির্বাচন করে Save দিন।</li>
+                        </ol>
+                    </div>
+
+                    <!-- Option C: Custom Domain -->
+                    <div class="glass-card p-5 rounded-2xl space-y-2 border-slate-700">
+                        <span class="text-amber-400 font-bold text-sm flex items-center gap-2">
+                            <i data-lucide="link" class="w-4 h-4"></i> কাস্টম ডোমেইন (Custom .com Domain)
+                        </span>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            আপনি চাইলে Namecheap, Namebright বা বাংলাদেশি ডোমেইন প্রোভাইডার থেকে <code class="bg-slate-800 px-1.5 py-0.5 rounded text-brand-400">toponeglassdesign.com</code> কিনে Netlify বা GitHub Pages এর সাথে কানেক্ট করতে পারবেন।
+                        </p>
+                    </div>
+                </div>
+
+                <div class="pt-2 text-center">
+                    <button @click="publishModalOpen = false" class="px-6 py-3 bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold text-xs rounded-xl shadow-lg transition-all">
+                        Got It! Close Guide
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alpine App State Script -->
+    <script>
+        function glassShopApp() {
+            return {
+                mobileMenuOpen: false,
+                modalOpen: false,
+                publishModalOpen: false,
+                selectedCategory: 'All',
+                activeGalleryImage: null,
+                toast: { show: false, message: '' },
+
+                calc: {
+                    type: 500,
+                    sqft: 20,
+                    name: '',
+                    phone: ''
+                },
+
+                categories: ['All', 'Glass Doors', 'Lighting Mirrors', 'Wall Glass & Mirrors', 'Bend Glass & Stairs', 'Custom Design'],
+
+                services: [
+                    {
+                        id: 1,
+                        title: 'Custom Glass Door & Sliding Partition',
+                        category: 'Glass Doors',
+                        thickness: '10mm / 12mm Toughened',
+                        description: 'Heavy-duty tempered glass doors for modern offices, master bathrooms, and balcony partition sliding doors in Dhaka.',
+                        image: 'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=800&q=80',
+                        features: ['Tempered Safety', 'Smooth Sliding Hardware', 'Custom Cutting']
+                    },
+                    {
+                        id: 2,
+                        title: 'LED Touch Sensor Lighting Mirror',
+                        category: 'Lighting Mirrors',
+                        thickness: '5mm / 6mm Belgian Mirror',
+                        description: 'Smart bathroom and dressing vanity mirrors featuring touch sensor control, defogger, and dual-tone LED backlight.',
+                        image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80',
+                        features: ['Touch Sensor Switch', 'Warm/White LED Glow', 'Anti-Fog Option']
+                    },
+                    {
+                        id: 3,
+                        title: 'Curved Staircase Bend Glass Railing',
+                        category: 'Bend Glass & Stairs',
+                        thickness: '12mm / 15mm Curved Glass',
+                        description: 'Architectural curved glass railings for duplex stairs, luxury showroom counters, and balcony glass guards.',
+                        image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80',
+                        features: ['Seamless Curve', 'High Impact Strength', 'Modern Stainless Fittings']
+                    },
+                    {
+                        id: 4,
+                        title: 'Decorative Wall Glass & Tinted Mirrors',
+                        category: 'Wall Glass & Mirrors',
+                        thickness: '5mm Bronze / Silver Mirror',
+                        description: 'Feature wall glass decor, diamond bevelled cut mirrors, and tinted reflective wall paneling for luxury living rooms.',
+                        image: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=800&q=80',
+                        features: ['Bevelled Edge', 'Bronze/Grey Tint', 'Space Amplifying']
+                    },
+                    {
+                        id: 5,
+                        title: 'Frosted & Etched Design Glass Work',
+                        category: 'Custom Design',
+                        thickness: '8mm / 10mm Design Glass',
+                        description: 'Patterned frosted privacy glass, acid-etched branding glass, and textured artistic interior glass.',
+                        image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80',
+                        features: ['Privacy Pattern', 'Custom Logo Etching', 'Scratch Resistant']
+                    }
+                ],
+
+                galleryImages: [
+                    { title: 'Modern Office Sliding Partition', location: 'Gulshan 2, Dhaka', url: 'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=800&q=80' },
+                    { title: 'Luxury LED Touch Bathroom Mirror', location: 'Uttara Model Town', url: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80' },
+                    { title: 'Duplex Curved Staircase Glass Railing', location: 'Madani Avenue, Dhaka', url: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80' },
+                    { title: 'Living Room Bronze Bevelled Wall Mirror', location: 'Banani, Dhaka', url: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=800&q=80' }
+                ],
+
+                initData() {
+                    this.$nextTick(() => lucide.createIcons());
+                },
+
+                get filteredServices() {
+                    if (this.selectedCategory === 'All') return this.services;
+                    return this.services.filter(s => s.category === this.selectedCategory);
+                },
+
+                get estimatedTotal() {
+                    const rate = Number(this.calc.type) || 0;
+                    const area = Number(this.calc.sqft) || 0;
+                    return Math.round(rate * area);
+                },
+
+                submitEstimate() {
+                    this.showToast(`Estimate submitted for ${this.calc.name}! We will call ${this.calc.phone} shortly.`);
+                },
+
+                openModal(item) {
+                    this.activeGalleryImage = {
+                        title: item.title,
+                        location: 'Custom Glass Fitting by Top One Glass Design',
+                        url: item.image
+                    };
+                    this.modalOpen = true;
+                    this.$nextTick(() => lucide.createIcons());
+                },
+
+                showToast(msg) {
+                    this.toast.message = msg;
+                    this.toast.show = true;
+                    setTimeout(() => {
+                        this.toast.show = false;
+                    }, 3500);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
